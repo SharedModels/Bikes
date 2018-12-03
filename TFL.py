@@ -19,6 +19,9 @@ class BikeScrape:
         self.bikes_present = {}
         self.empty_docks = {}
         self.total_docks = {}
+        self.bikes_presentDF = pd.DataFrame()
+        self.empty_docksDF = pd.DataFrame()
+        self.total_docksDF = pd.DataFrame()
         # self.cols = ids.insert(0, 'Time')
         # self.bikespresent = pd.DataFrame(columns=self.ids)
         # self.emptydocks = pd.DataFrame(columns=self.ids)
@@ -51,6 +54,15 @@ class BikeScrape:
         self.empty_docks[stamp] = (current_empty.copy())
         self.total_docks[stamp] = (current_total.copy())
 
+    def createDFs(self):
+        self.bikes_presentDF = pd.DataFrame(self.bikes_present)
+        self.empty_docksDF = pd.DataFrame(self.bikes_present)
+        self.total_docksDF = pd.DataFrame(self.total_docks)
 
-a = BikeScrape().scrape(100)
-print(a.bikes_present)
+    def writeToCSV(self, path):
+        self.bikes_presentDF.to_csv(path + "bikes_present.csv")
+        self.empty_docksDF.to_csv(path + "empty_docks.csv")
+        self.total_docksDF.to_csv("total_docks.csv")
+
+# a = BikeScrape().scrape(5)
+# print(a.bikes_present)
