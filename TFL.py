@@ -106,6 +106,10 @@ class BikeScrape:
         self.empty_docksDF.to_csv(path + "empty_docks.csv")
         self.total_docksDF.to_csv(path + "total_docks.csv")
 
+    def createDFs(self):
+        self.bikes_presentDF = pd.DataFrame(self.bikes_present)
+        self.empty_docksDF = pd.DataFrame(self.bikes_present)
+        self.total_docksDF = pd.DataFrame(self.total_docks)
 
 if __name__ == '__main__':
     obj = BikeScrape(time_step=60)
