@@ -53,7 +53,7 @@ def update_bikes(i):
     return nodes, fig
 
 
-a = pd.read_csv('bikes_present_day.csv', index_col=0)
+a = pd.read_csv('test7bikes_present_3.csv', index_col=0)
 a = a.dropna(axis=1)
 time_stamp_list = a.timestamp.tolist()
 
@@ -70,12 +70,11 @@ fig.suptitle(time_stamp_list[0])
 m = Basemap(llcrnrlon=-0.25, llcrnrlat=51.4, urcrnrlon=0, urcrnrlat=51.56)
 m.readshapefile('Areas', 'areas')
 
-nodes = nx.draw_networkx_nodes(graph,label='hello', pos=dock_pos, node_size=[j * 20 for j in list_sizes[0]])
-
+nodes = nx.draw_networkx_nodes(graph, label='hello', pos=dock_pos, node_size=[j * 20 for j in list_sizes[0]])
 
 anim = FuncAnimation(fig, update_bikes, frames=np.arange(0, a.shape[0]), interval=200, repeat=True)
 # plt.show()
-anim.save('bikes_present.gif', dpi=80, writer='imagemagick')
+anim.save('test7bikes_present_3.gif', dpi=80, writer='imagemagick')
 
 
 
