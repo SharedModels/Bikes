@@ -7,7 +7,8 @@ class BikesModelPipeline:
     def __init__(self, na_thresh=5):
         self.na_thresh = na_thresh
 
-    def dock_positions(self):
+    @staticmethod
+    def dock_positions():
         with open('metadata.json') as f:
             data = json.load(f)
 
@@ -44,6 +45,8 @@ class BikesModelPipeline:
         return df
 
     def train_test_split(self, df, frac=0.3):
+        df = self.transform_to_rows(df)
+        df = self.transform(df)
         timestamp_unique = df.timestamp.unique()
         bottom_date = timestamp_unique[round((len(timestamp_unique) - len(timestamp_unique) * frac))]
 
