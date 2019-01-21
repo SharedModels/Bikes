@@ -18,7 +18,7 @@ def dock_positions():
 
 
 df = pd.read_csv('test7bikes_present.csv', index_col=0)
-df = df.dropna(axis=1)
+df = df.dropna(axis=1, thresh=5)
 
 """Row for each timestamp, lat/long, previous n , previous 24 * 15"""
 
