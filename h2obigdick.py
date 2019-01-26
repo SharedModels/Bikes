@@ -18,3 +18,5 @@ y="bikes_present"
 
 aml = H2OAutoML(max_models=20, seed=1)
 aml.train(x=x, y=y, training_frame=train)
+
+preds = aml.leader.predict(test)
