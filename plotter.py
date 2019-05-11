@@ -12,8 +12,8 @@ site_lon = metadata.Long
 locations_name = metadata.Name
 
 preds = pd.read_csv("sample_preds.csv")
-present = pd.read_csv("test8bikes_present.csv")
-total = pd.read_csv("test8total_docks.csv")
+present = pd.read_csv("present_server_test.csv")
+total = pd.read_csv("docks_server_test.csv")
 
 present_latest = present.iloc[-1]
 total_latest = total.iloc[-1]
