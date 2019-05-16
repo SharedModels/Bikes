@@ -74,7 +74,7 @@ class BikesModelPipeline:
 
         return df
 
-      def transform(self, df, value_column='bikes_present', future=True):
+    def transform(self, df, value_column='bikes_present', future=True):
         row_transformed = self.transform_to_rows(df, value_column)
         train_transform = self.transform_to_train(row_transformed, value_column, future)
         return train_transform

@@ -155,6 +155,7 @@ def slider_function(x):
         ),
     )
     return {'data': data, 'layout': layout}
+    # return {'data': data, 'layout': layout}
 
 # fig = go.Figure(data=slider_function(15)['data'], layout=slider_function(15)['layout'])
 # py.plot(fig, filename='bike_locs.html')
