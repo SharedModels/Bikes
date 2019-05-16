@@ -5,13 +5,18 @@ mapbox_access_token = "pk.eyJ1IjoiZHlzb250IiwiYSI6ImNqdXgybXF5NzBoNzkzenFybmJudn
 
 
 class ServerPlotTransform:
-    def predictions_transform(self, bikes_present, bikes_total, predictions, metadata='metadata.json'):
+    def __init__(self, metadata='metadata.json'):
+        self.metadata = self.initiate_metadata(metadata)
+
+    def initiate_metadata(self, metadata):
         metadata = pd.read_json(metadata)
         metadata = metadata.T
-        # site_lat = metadata.Lat
-        # site_lon = metadata.Long
-        # locations_name = metadata.Name
+        metadata['ID'] = metadata['ID'].astype(int)
+        return metadata
 
+    def predictions_transform(self, bikes_present, bikes_total, predictions):
+        # TODO There is loads here that could be more efficient but requires more thought
+        metadata = self.metadata
         present_latest = bikes_present.iloc[-1]
         total_latest = bikes_total.iloc[-1]
 
@@ -19,7 +24,6 @@ class ServerPlotTransform:
         metadata['total'] = [total_latest[i] for i in list(metadata.ID)]
 
         predictions['dock'] = predictions['dock'].astype(int)
-        metadata['ID'] = metadata['ID'].astype(int)
         with_predictions = metadata.merge(predictions, left_on='ID', right_on='dock').dropna()
         for i in range(1, 5):
             with_predictions[f'{i * 15}_colour'] = 'rgb(81, 81, 81)'
@@ -47,46 +51,49 @@ class ServerPlotTransform:
 
         return metadata.dropna()
 
+    def slider_function(self, x, df):
+        data = [
 
-def slider_function(x, df):
-    data = [
+            go.Scattermapbox(
+                lat=df['Lat'],
+                lon=df['Long'],
+                mode='markers',
+                marker=go.scattermapbox.Marker(
+                    size=df['present'],
+                    color=df[f'{x}_colour'],
+                    opacity=0.7
+                ),
+            )
+        ]
+        return data
 
-        go.Scattermapbox(
-            lat=df['Lat'],
-            lon=df['Long'],
-            mode='markers',
-            marker=go.scattermapbox.Marker(
-                size=df['total'],
-                color=df[f'{x}_colour'],
-                opacity=0.7
+    def layout(self):
+
+        layout = go.Layout(
+            title='Bike Stations',
+            autosize=True,
+            hovermode='closest',
+            showlegend=False,
+            uirevision="none",
+            # width=1000,
+            # height=700,
+            margin=go.layout.Margin(
+                l=0,
+                r=0,
+                b=0,
+                t=0,
+                pad=0),
+            mapbox=go.layout.Mapbox(
+                accesstoken=mapbox_access_token,
+                bearing=0,
+                center=go.layout.mapbox.Center(
+                    lat=51.5,
+                    lon=-0.102
+                ),
+                # pitch=0,
+                zoom=13,
+
+                style='outdoors'
             ),
         )
-    ]
-
-    layout = go.Layout(
-        title='Bike Stations',
-        autosize=True,
-        hovermode='closest',
-        showlegend=False,
-        # width=1000,
-        # height=700,
-        margin=go.layout.Margin(
-            l=0,
-            r=0,
-            b=0,
-            t=0,
-            pad=0),
-        mapbox=go.layout.Mapbox(
-            accesstoken=mapbox_access_token,
-            bearing=0,
-            center=go.layout.mapbox.Center(
-                lat=51.5,
-                lon=-0.102
-            ),
-           # pitch=0,
-            zoom=13,
-
-            style='outdoors'
-        ),
-    )
-    return {'data': data, 'layout': layout}
+        return layout

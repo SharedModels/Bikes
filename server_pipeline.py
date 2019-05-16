@@ -1,8 +1,7 @@
-import pandas as pd
 from server_scrape import ServerScrape
 from server_model_transform import BikesModelTransform
 from server_predict import ServerPredict
-from server_plotly import ServerPlotTransform, slider_function
+from server_plotly import ServerPlotTransform
 
 
 class ServerPipeline:
@@ -18,6 +17,7 @@ class ServerPipeline:
         self.loop_list = self.create_loop_list()
         self.plot_df = None
         self.prev_interval = -2
+        self.layout = self.plot_transformer.layout()
 
     def calculate_num_keep(self):
         return int((self.training_interval * self.model_previous) / self.interval_time)
@@ -32,7 +32,7 @@ class ServerPipeline:
         print(bikes_present.shape)
         if len(bikes_present) < self.num_keep - 1:
             self.plot_df = self.plot_transformer.non_predictions_transform(bikes_present, total_docks)
-            return slider_function(15, self.plot_df)
+            return {'data': self.plot_transformer.slider_function(15, self.plot_df), 'layout': self.layout}
 
         transformed_bikes = self.model_transformer.transform(bikes_present, 'bikes_present', loop_list=self.loop_list,
                                                              future=False)
@@ -43,10 +43,10 @@ class ServerPipeline:
         plot_df = self.plot_transformer.predictions_transform(bikes_present, total_docks, predictions)
         self.plot_df = plot_df
         self.prev_interval = interval
-        return slider_function(15, self.plot_df)
+        return {'data': self.plot_transformer.slider_function(15, self.plot_df), 'layout': self.layout}
 
     def slider_update(self, x):
-        return slider_function(x, self.plot_df)
+        return {'data': self.plot_transformer.slider_function(x, self.plot_df), 'layout': self.layout}
 
 
 if __name__ == '__main__':

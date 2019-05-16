@@ -6,7 +6,7 @@ import server_pipeline
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-obj = server_pipeline.ServerPipeline(interval_time=5, training_interval=10)
+obj = server_pipeline.ServerPipeline(interval_time=5)
 obj.interval_update(-1)
 
 app.layout = html.Div([
