@@ -52,8 +52,20 @@ class ServerPipeline:
 if __name__ == '__main__':
     import time
 
-    obj = ServerPipeline(interval_time=5, training_interval=10)
+    obj = ServerPipeline(interval_time=5)
+    obj.interval_update(-1)
+
+
+    def interval_update(n_intervals, value):
+        # if prev_interval != n_intervals:
+        obj.interval_update(n_intervals)
+        # prev_interval = n_intervals
+        return obj.slider_update(value)
+
+
+    c = 0
     while True:
-        time.sleep(1)
-        a = obj.interval_update()
-        print(a)
+        a = interval_update(c, 15)
+        c += 1
+        time.sleep(5)
+        # print(a)

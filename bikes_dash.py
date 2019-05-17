@@ -6,7 +6,7 @@ import server_pipeline
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-obj = server_pipeline.ServerPipeline(interval_time=5)
+obj = server_pipeline.ServerPipeline(interval_time=30)
 obj.interval_update(-1)
 
 app.layout = html.Div([
@@ -26,7 +26,7 @@ app.layout = html.Div([
     ,
     dcc.Interval(
         id='interval-component',
-        interval=5 * 1000,  # in milliseconds
+        interval=30 * 1000,  # in milliseconds
         n_intervals=0)
 
 ], style={'height': '100%'})

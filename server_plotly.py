@@ -22,6 +22,9 @@ class ServerPlotTransform:
 
         metadata['present'] = [present_latest[i] for i in list(metadata.ID)]
         metadata['total'] = [total_latest[i] for i in list(metadata.ID)]
+        metadata = metadata.dropna()
+        metadata['present_text'] = metadata['present'].astype(int).astype(str) + ' bikes currently at this station'
+        metadata['total_text'] = metadata['total'].astype(int).astype(str) + ' docks currently for this station'
 
         predictions['dock'] = predictions['dock'].astype(int)
         with_predictions = metadata.merge(predictions, left_on='ID', right_on='dock').dropna()
@@ -34,18 +37,19 @@ class ServerPlotTransform:
 
         return with_predictions
 
-    def non_predictions_transform(self, bikes_present, bikes_total, metadata='metadata.json'):
-        metadata = pd.read_json(metadata)
-        metadata = metadata.T
-        # site_lat = metadata.Lat
-        # site_lon = metadata.Long
-        # locations_name = metadata.Name
+    def non_predictions_transform(self, bikes_present, bikes_total):
+        metadata = self.metadata
 
         present_latest = bikes_present.iloc[-1]
+
         total_latest = bikes_total.iloc[-1]
 
         metadata['present'] = [present_latest[i] for i in list(metadata.ID)]
         metadata['total'] = [total_latest[i] for i in list(metadata.ID)]
+        metadata = metadata.dropna()
+        metadata['present_text'] = metadata['present'].astype(int).astype(str) + ' bikes currently at this station'
+        metadata['total_text'] = metadata['total'].astype(int).astype(str) + ' docks currently for this station'
+
         for i in range(1, 5):
             metadata[f'{i * 15}_colour'] = 'rgb(81, 81, 81)'
 
@@ -59,10 +63,12 @@ class ServerPlotTransform:
                 lon=df['Long'],
                 mode='markers',
                 marker=go.scattermapbox.Marker(
-                    size=df['present'],
+                    size=df['total'],
                     color=df[f'{x}_colour'],
                     opacity=0.7
                 ),
+                text=df['Name'] + "<br />" + df['present_text'] + "<br />" + df['total_text'],
+                hoverinfo='text'
             )
         ]
         return data
