@@ -44,4 +44,4 @@ def interval_update(n_intervals, value):
 
 
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(host='0.0.0.0', port=80)
