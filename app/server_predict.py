@@ -1,6 +1,6 @@
 import pandas as pd
 import pickle
-from server_model_transform import BikesModelTransform
+from app.server_model_transform import BikesModelTransform
 
 
 class ServerPredict:

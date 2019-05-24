@@ -55,16 +55,4 @@ class BikesModelTransform:
 
 
 if __name__ == '__main__':
-    from server_scrape import ServerScrape
-    import time
-
-    obj = ServerScrape('metadata.json')
-    transform = BikesModelTransform()
-    while True:
-        time.sleep(1)
-        a, b, c = obj.update(20)
-        print(a.shape)
-        if len(a) < 19:
-            continue
-        d = transform.transform(a)
-        print(d)
+    print('spoopy')

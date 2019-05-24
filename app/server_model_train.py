@@ -1,10 +1,8 @@
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from lightgbm import LGBMClassifier
 import pandas as pd
 import pickle
-from server_model_transform import BikesModelTransform
-from server_predict import ServerPredict
+from app.server_model_transform import BikesModelTransform
+from app.server_predict import ServerPredict
 
 
 class ServerModelTrain:

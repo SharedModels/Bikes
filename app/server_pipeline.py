@@ -1,7 +1,7 @@
-from server_scrape import ServerScrape
-from server_model_transform import BikesModelTransform
-from server_predict import ServerPredict
-from server_plotly import ServerPlotTransform
+from app.server_scrape import ServerScrape
+from app.server_model_transform import BikesModelTransform
+from app.server_predict import ServerPredict
+from app.server_plotly import ServerPlotTransform
 import datetime
 import pandas as pd
 import time
