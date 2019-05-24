@@ -3,10 +3,12 @@ import dash_core_components as dcc
 import dash_html_components as html
 import server_pipeline
 
+interval_time = 5 * 60
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-obj = server_pipeline.ServerPipeline(interval_time=30)
+obj = server_pipeline.ParallelServerPipeline(interval_time=interval_time)
 obj.interval_update(-1)
 
 app.layout = html.Div([
@@ -26,21 +28,27 @@ app.layout = html.Div([
     ,
     dcc.Interval(
         id='interval-component',
-        interval=30 * 1000,  # in milliseconds
+        interval=interval_time * 1000,  # in milliseconds
         n_intervals=0)
 
 ], style={'height': '100%'})
 
 
+# @app.callback(
+#     dash.dependencies.Output('current bikes', 'figure'),
+#     [dash.dependencies.Input('interval-component', 'n_intervals'),
+#      dash.dependencies.Input('my-slider', 'value')])
+# def interval_update(n_intervals, value):
+#     # if prev_interval != n_intervals:
+#     obj.interval_update(n_intervals)
+#     # prev_interval = n_intervals
+#     return obj.slider_update(value)
 @app.callback(
     dash.dependencies.Output('current bikes', 'figure'),
     [dash.dependencies.Input('interval-component', 'n_intervals'),
      dash.dependencies.Input('my-slider', 'value')])
 def interval_update(n_intervals, value):
-    # if prev_interval != n_intervals:
-    obj.interval_update(n_intervals)
-    # prev_interval = n_intervals
-    return obj.slider_update(value)
+    return obj.combined_update(n_intervals, value)
 
 
 if __name__ == '__main__':

@@ -10,7 +10,8 @@ class ServerPredict:
 
     def predict(self, df, prediction_column):
         # test_data = df.drop([prediction_column, 'timestamp', 'lat', 'long'], axis=1)
-        test_data = df.drop([prediction_column, 'timestamp', 'dock'], axis=1)
+        test_data = df.drop([prediction_column, 'timestamp', 'lat', 'long'], axis=1)
+        test_data = pd.get_dummies(test_data)
         prediction_df = df.copy()
         column_names = []
 

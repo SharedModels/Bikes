@@ -1,5 +1,6 @@
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from lightgbm import LGBMClassifier
 import pandas as pd
 import pickle
 from server_model_transform import BikesModelTransform
@@ -28,7 +29,8 @@ class ServerModelTrain:
         # NO BIKES PRESENT = 1, I.E EMPTY DOCK
         # NO EMPTY DOCKS = 1, I.E FULL DOCK
         # train = df.drop(['timestamp', 'lat', 'long', target_col] + [target_col + f'_-{i}' for i in range(1, 5)], axis=1)
-        train = df.drop(['timestamp', 'dock', target_col] + [target_col + f'_-{i}' for i in range(1, 5)], axis=1)
+        train = df.drop(['timestamp', 'lat', 'long', target_col] + [target_col + f'_-{i}' for i in range(1, 5)], axis=1)
+        train = pd.get_dummies(train)
         map_dict = {i: i * 15 for i in range(1, 5)}
 
         for i in range(1, 5):
@@ -62,7 +64,8 @@ def find_accuracy():
     obj = ServerModelTrain()
     transformer = BikesModelTransform()
 
-    bikes_present = pd.concat([pd.read_csv('test7bikes_present.csv'), pd.read_csv('test8bikes_present.csv')])
+    bikes_present = pd.concat([pd.read_csv('test7bikes_present.csv'), pd.read_csv('test8bikes_present.csv'),
+                               pd.read_csv('test9bikes_present.csv')])
     test_bikes = bikes_present.tail(round(len(bikes_present) / 3))
     train_bikes = bikes_present.head(round(len(bikes_present) / (3 / 2)))
 
@@ -80,7 +83,10 @@ def find_accuracy():
     with_preds = pd.concat(binary_test + [pred_df], axis=1)
     print(len(with_preds))
     print(len(with_preds[with_preds['bikes_present_-1'] == with_preds['bikes_present_15_predictions']]))
+    print(
+        len(with_preds[with_preds['bikes_present_-1'] == with_preds['bikes_present_15_predictions']]) / len(with_preds))
 
 
 if __name__ == '__main__':
-    find_accuracy()
+    # find_accuracy()
+    train_all()
