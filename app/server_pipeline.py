@@ -1,7 +1,7 @@
-from app.server_scrape import ServerScrape
-from app.server_model_transform import BikesModelTransform
-from app.server_predict import ServerPredict
-from app.server_plotly import ServerPlotTransform
+from server_scrape import ServerScrape
+from server_model_transform import BikesModelTransform
+from server_predict import ServerPredict
+from server_plotly import ServerPlotTransform
 import datetime
 import pandas as pd
 import time
@@ -64,7 +64,7 @@ class ParallelServerPipeline(ServerPipeline):
         self.save_path = save_path
 
     def combined_update(self, interval, x):
-        print(interval)
+        # print(interval)
         # if interval == self.prev_interval:
         #     return None
 
@@ -73,7 +73,7 @@ class ParallelServerPipeline(ServerPipeline):
         return self.slider_update(x)
 
     def interval_update(self, interval):
-        print(interval, self.prev_interval)
+        # print(interval, self.prev_interval)
         if interval == self.prev_interval:
             return None
 
@@ -81,16 +81,20 @@ class ParallelServerPipeline(ServerPipeline):
         self.prev_interval = interval
         return {'data': self.plot_transformer.slider_function(15, self.update()), 'layout': self.layout}
 
+    def update_and_save(self):
+        df = self.update()
+        df.to_csv(self.save_path)
+
     def parallel_loop(self):
         while True:
             update_start = datetime.datetime.now()
-            plot_df = self.update()
-            plot_df.to_csv(self.save_path)
+            self.update_and_save()
             update_finish = datetime.datetime.now()
             time.sleep(self.interval_time - (update_finish - update_start).seconds)
 
 
 if __name__ == '__main__':
     import bikes_dash
+
     obj = ParallelServerPipeline(interval_time=bikes_dash.interval_time)
     obj.parallel_loop()

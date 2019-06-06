@@ -1,7 +1,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import app.server_pipeline as server_pipeline
+import server_pipeline as server_pipeline
 
 interval_time = 5 * 60
 
@@ -9,6 +9,7 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 obj = server_pipeline.ParallelServerPipeline(interval_time=interval_time)
+obj.update_and_save()
 obj.interval_update(-1)
 
 app.layout = html.Div([
@@ -53,3 +54,4 @@ def interval_update(n_intervals, value):
 
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=80)
+    # app.run_server()

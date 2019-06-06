@@ -1,8 +1,8 @@
 from sklearn.linear_model import LogisticRegression
 import pandas as pd
 import pickle
-from app.server_model_transform import BikesModelTransform
-from app.server_predict import ServerPredict
+from server_model_transform import BikesModelTransform
+from server_predict import ServerPredict
 
 
 class ServerModelTrain:
