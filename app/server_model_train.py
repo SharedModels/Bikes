@@ -27,7 +27,7 @@ class ServerModelTrain:
         # NO BIKES PRESENT = 1, I.E EMPTY DOCK
         # NO EMPTY DOCKS = 1, I.E FULL DOCK
         # train = df.drop(['timestamp', 'lat', 'long', target_col] + [target_col + f'_-{i}' for i in range(1, 5)], axis=1)
-        train = df.drop(['timestamp', 'lat', 'long', target_col] + [target_col + f'_-{i}' for i in range(1, 5)], axis=1)
+        train = df.drop(['timestamp', 'dock', target_col] + [target_col + f'_-{i}' for i in range(1, 5)], axis=1)
         train = pd.get_dummies(train)
         map_dict = {i: i * 15 for i in range(1, 5)}
 

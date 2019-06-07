@@ -51,7 +51,7 @@ class ServerScrape:
         run_time = datetime.datetime.now()
         stamp = run_time.strftime("%Y-%m-%d %H:%M:%S")
         self.capture(stamp)
-        if len(self.bikes_present) >= number_keep:
+        if len(self.bikes_present) > number_keep:
             self.bikes_present = self.bikes_present[1:]
             self.empty_docks = self.empty_docks[1:]
             self.total_docks = self.total_docks[1:]

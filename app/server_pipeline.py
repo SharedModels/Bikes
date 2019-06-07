@@ -31,7 +31,7 @@ class ServerPipeline:
     def update(self):
         bikes_present, empty_docks, total_docks = self.scraper.update(self.num_keep)
         print(bikes_present.shape)
-        if len(bikes_present) < self.num_keep - 1:
+        if len(bikes_present) < self.num_keep:
             self.plot_df = self.plot_transformer.non_predictions_transform(bikes_present, total_docks)
             return self.plot_df
             # return {'data': self.plot_transformer.slider_function(15, self.plot_df), 'layout': self.layout}
@@ -96,5 +96,5 @@ class ParallelServerPipeline(ServerPipeline):
 if __name__ == '__main__':
     import bikes_dash
 
-    obj = ParallelServerPipeline(interval_time=bikes_dash.interval_time)
+    obj = bikes_dash.pipeline_obj
     obj.parallel_loop()
