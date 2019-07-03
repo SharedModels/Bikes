@@ -35,8 +35,9 @@ class ServerModelTrain:
             clf = LogisticRegression()
             y = df[target_col + f'_-{i}']
             y = self.create_binary_variable(y)
-            X, y = self.balance_classes(train, y)
-            print(X.shape)
+            X = train
+            # X, y = self.balance_classes(X, y)
+            # print(X.shape)
             clf.fit(X, y)
             with open(target_col + f'_clf_{map_dict[i]}{model_extra}.pkl', 'wb') as file:
                 pickle.dump(clf, file)
@@ -62,29 +63,35 @@ def find_accuracy():
     obj = ServerModelTrain()
     transformer = BikesModelTransform()
 
-    bikes_present = pd.concat([pd.read_csv('test7bikes_present.csv'), pd.read_csv('test8bikes_present.csv'),
-                               pd.read_csv('test9bikes_present.csv')])
+    bikes_present = pd.concat([pd.read_csv('test7bikes_present.csv'), pd.read_csv('test8bikes_present.csv')])
     test_bikes = bikes_present.tail(round(len(bikes_present) / 3))
     train_bikes = bikes_present.head(round(len(bikes_present) / (3 / 2)))
 
     transformed_train = transformer.transform(train_bikes, 'bikes_present')
     transformed_test = transformer.transform(test_bikes, 'bikes_present')
+    transformed_test.sample(10000).to_csv('test_csv.csv')
 
     obj.fit_pipeline(transformed_train, 'bikes_present', model_extra='_test')
 
     test_predict_df = transformed_test.drop(
         ['bikes_present_-1', 'bikes_present_-2', 'bikes_present_-3', 'bikes_present_-4'], axis=1)
     binary_test = [obj.create_binary_variable(transformed_test[i]) for i in
-                   ['bikes_present_-1', 'bikes_present_-2', 'bikes_present_-3', 'bikes_present_-4']]
+                   ['bikes_present_0', 'bikes_present_-1', 'bikes_present_-2', 'bikes_present_-3', 'bikes_present_-4']]
 
     pred_df = predictor.predict(test_predict_df, 'bikes_present')
     with_preds = pd.concat(binary_test + [pred_df], axis=1)
+    with_preds.to_csv('predictions.csv')
+    predicted_true = with_preds[with_preds['bikes_present_15_predictions'] == 1]
     print(len(with_preds))
-    print(len(with_preds[with_preds['bikes_present_-1'] == with_preds['bikes_present_15_predictions']]))
+    print(len(predicted_true))
+    print(len(predicted_true[predicted_true['bikes_present_0'] == 1]))
     print(
-        len(with_preds[with_preds['bikes_present_-1'] == with_preds['bikes_present_15_predictions']]) / len(with_preds))
+        len(with_preds[with_preds['bikes_present_-2'] == with_preds['bikes_present_30_predictions']]) / len(with_preds))
+    print(
+        len(with_preds[with_preds['bikes_present_-2'] == with_preds['bikes_present_0']]) / len(with_preds))
 
 
 if __name__ == '__main__':
-    # find_accuracy()
-    train_all()
+    # train_all()
+    find_accuracy()
+    # train_all()

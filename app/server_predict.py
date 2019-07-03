@@ -18,6 +18,7 @@ class ServerPredict:
         for i in [15, 30, 45, 60]:
             with open(self.model_name.format(prediction_column, i), 'rb') as file:
                 clf = pickle.load(file)
+                # print(clf.coef_)
                 current_column_name = '{}_{}_predictions'.format(prediction_column, i)
                 prediction_df[current_column_name] = clf.predict(test_data)
                 column_names.append(current_column_name)
