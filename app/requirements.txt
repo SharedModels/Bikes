@@ -1,4 +1,9 @@
 plotly
+numpy
 pandas
 dash
 sklearn
+sqlalchemy
+requests
+pymysql
+statsmodels

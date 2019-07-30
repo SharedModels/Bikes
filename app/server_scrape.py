@@ -5,7 +5,7 @@ import requests as r
 from xml.etree.ElementTree import fromstring
 import datetime
 import time
-import app.config
+import config
 
 
 class ServerScrape:
@@ -65,7 +65,7 @@ class ConstantScrape:
         self.interval_time = interval_time
         self.scraper = scraper
         if db_engine is None:
-            path = os.path.join('mysql+pymysql://' + app.config.MYSQL_USERNAME + ':' + app.config.MYSQL_PASSWORD +
+            path = os.path.join('mysql+pymysql://' + config.MYSQL_USERNAME + ':' + config.MYSQL_PASSWORD +
                                 '@bikes-db-1.cxd403f5i8vi.eu-west-2.rds.amazonaws.com:3306/bikes')
             self.db_engine = create_engine(path)
         else:
@@ -89,7 +89,10 @@ class ConstantScrape:
         while True:
             start_time = datetime.datetime.now()
             print(start_time)
-            self.single_scrape()
+            try:
+                self.single_scrape()
+            except Exception as e:
+                print(e)
             final_time = self.interval_time - ((datetime.datetime.now() - start_time).seconds + start_time.second)
             time.sleep(final_time)
 
@@ -98,8 +101,10 @@ if __name__ == '__main__':
     import os
     from sqlalchemy import create_engine
 
-    path = os.path.join('mysql+pymysql://' + app.config.MYSQL_USERNAME + ':' + app.config.MYSQL_PASSWORD +
-                        '@bikes-db-1.cxd403f5i8vi.eu-west-2.rds.amazonaws.com:3306/bikes')
-    engine = create_engine(path)
+    # from sqlalchemy import create_engine
+    #
+    # path = os.path.join('mysql+pymysql://' + config.MYSQL_USERNAME + ':' + config.MYSQL_PASSWORD +
+    #                     '@bikes-db-1.cxd403f5i8vi.eu-west-2.rds.amazonaws.com:3306/bikes')
+    # engine = create_engine(path)
 
-    ConstantScrape(engine).constant_scrape()
+    ConstantScrape().constant_scrape()
