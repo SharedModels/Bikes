@@ -7,3 +7,5 @@ sqlalchemy
 requests
 pymysql
 statsmodels
+keras
+tensorflow == 1.5
